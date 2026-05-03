@@ -1,0 +1,17 @@
+=== analisis estructural del grafo ===
+
+estadistica                        valor snap        valor obtenido
+------------------------------------------------------------
+numero de nodos                    1,088,092          1088092
+numero de aristas (no dirigidas)   1,541,898          1541898
+promedio de grado                   ~2.83              2.83413
+nodo de mayor grado                (identificar)       674502 (indice: 672889, grado: 9)
+
+componentes conexas: 206
+nodos en componente principal: 1087562 (snap: 1,087,562)
+diametro aproximado (bfs desde nodo de mayor grado): 592 (snap: 782)
+
+explicacion del diametro:
+- snap reporta 782 como el diametro (camino mas largo entre todos los pares).
+- nuestra estimacion usa bfs desde un solo nodo (el de mayor grado).
+- para obtener el diametro real se requiere bfs desde cada nodo.
