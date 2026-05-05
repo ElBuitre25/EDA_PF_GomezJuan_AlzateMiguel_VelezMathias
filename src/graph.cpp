@@ -1,5 +1,6 @@
 #include "graph.hpp"
 #include <unordered_set>  // para usar el set que no permite repetidos
+#include <cstdlib> // srand y rand para los pesos aleatorios
 
 // esta funcion lee el archivo una primera vez solo para mapear los ids
 // porque los nodos no estan numerados del 0 al final, hay huecos
@@ -58,6 +59,49 @@ bool Graph::loadCurated(const std::string& filename) {
             adj[idx_u].push_back(idx_v);  // agregamos v a la lista de u
             adj[idx_v].push_back(idx_u);  // como es no dirigido, tambien u a v
             numEdges++;
+        }
+    }
+    file.close();
+    return true;
+}
+
+// loadCuratedWithWeights: cargar el grafo con pesos aleatorios
+// para cada arista, se genera un solo peso = (rand() % 10) + 1
+
+bool Graph::loadCuratedWithWeights(const std::string& filename) {
+    reindex(filename); 
+
+    adj.assign(numNodes, std::vector<int>());
+    adjW.assign(numNodes, std::vector<std::pair<int,int>>()); 
+
+    std::ifstream file(filename);
+    if (!file.is_open()) return false;
+
+    //srand(42) antes de parsear
+    srand(42);
+    std::string line;
+    std::getline(file, line);
+
+    numEdges = 0;
+    while(std::getline(file, line)) {
+        if (line.empty()) continue;
+        std::stringstream ss(line);
+        int u, v;
+        if (ss >> u >> v) {
+            int iu = idToIdx[u];
+            int iv = idToIdx[v];
+            int w = (rand() % 10) + 1; // peso aleatorio entre 1 y 10
+
+            // lista no ponderada (BFS)
+            adj[iu].push_back(iv);
+            adj[iv].push_back(iu);
+
+            //lista ponderada (Dijkstra)
+            adjW[iu].emplace_back(iv, w);
+            adjW[iv].emplace_back(iu, w);
+
+            numEdges++;
+
         }
     }
     file.close();
