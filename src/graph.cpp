@@ -1,6 +1,11 @@
 #include "graph.hpp"
 #include <unordered_set>  // para usar el set que no permite repetidos
 #include <cstdlib> // srand y rand para los pesos aleatorios
+#include <queue>      // Necesario para la priority_queue de Dijkstra
+#include <algorithm>  // Necesario para std::sort y std::reverse
+#include <iostream>
+#include <fstream>
+#include <sstream>
 
 // esta funcion lee el archivo una primera vez solo para mapear los ids
 // porque los nodos no estan numerados del 0 al final, hay huecos
@@ -226,4 +231,45 @@ void Graph::writeStructuralAnalysis(const std::string& outputPath) {
 
     out.close();
     std::cout << "analisis guardado en: " << outputPath << std::endl;
+}
+// implementación de dijkstra para sacar los caminos del modulo b
+std::vector<int> Graph::dijkstra(int startId, int endId) {
+    int startIdx = getInternalIdx(startId);
+    int endIdx = getInternalIdx(endId);
+    
+    if (startIdx == -1 || endIdx == -1) return {};
+
+    std::vector<long long> dist(numNodes, INF_DIST);
+    std::vector<int> parent(numNodes, -1);
+    using pii = std::pair<long long, int>;
+    std::priority_queue<pii, std::vector<pii>, std::greater<pii>> pq;
+
+    dist[startIdx] = 0;
+    pq.push({0, startIdx});
+
+    while (!pq.empty()) {
+        long long d = pq.top().first;
+        int u = pq.top().second;
+        pq.pop();
+
+        if (d > dist[u]) continue;
+        if (u == endIdx) break;
+
+        for (auto& edge : adjW[u]) {
+            int v = edge.first;
+            int weight = edge.second;
+            if (dist[u] + weight < dist[v]) {
+                dist[v] = dist[u] + weight;
+                parent[v] = u;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+
+    std::vector<int> path;
+    for (int v = endIdx; v != -1; v = parent[v]) {
+        path.push_back(idxToId[v]);
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
 }

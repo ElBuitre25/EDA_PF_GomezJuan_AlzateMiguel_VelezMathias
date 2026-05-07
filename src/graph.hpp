@@ -1,6 +1,5 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
-
 #include <vector>
 #include <queue>
 #include <stack>
@@ -54,6 +53,9 @@ public:
     bool hasOriginalId(int originalId) const {
         return idToIdx.count(originalId) > 0;
     }  
+
+    // --- Para que el Modulo C pueda pedirle rutas al Modulo B ---
+    std::vector<int> dijkstra(int startId, int endId);
 };
 
 #endif

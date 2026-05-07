@@ -1,6 +1,9 @@
 #include "graph.hpp"
+#include "subgraph_module.cpp"
 #include <iostream>
 #include <cstdlib>
+#include "subgraph_module.hpp"
+
 
 void printUsage(const char* prog) {
     std::cout << "Uso: " << prog << " -m <modulo> [-d dataset] [-o output]" << std::endl;
@@ -52,10 +55,20 @@ int main(int argc, char* argv[]) {
         std::string outputPath = outputDir + "/analisis_estructural.txt";
         g.writeStructuralAnalysis(outputPath);
 
+    } else if (module == "C") {
+        std::cout << "=== Modulo C: Analisis de Subgrafo ===" << std::endl;
+        Graph g;
+        if (!g.loadCuratedWithWeights(dataset)) return 1;
+
+        // sacamos las rutas reales usando los ids de Pennsylvania
+        std::vector<int> pathQ01 = g.dijkstra(0, 6353); 
+        std::vector<int> pathQ06 = g.dijkstra(2, 309);
+
+        SubgraphModule modC;
+        modC.runModuleC(g, pathQ01, pathQ06);
     } else {
         std::cout << "Módulo " << module << " no implementado aún" << std::endl;
         return 0;
     }
 
-    return 0;
 }
