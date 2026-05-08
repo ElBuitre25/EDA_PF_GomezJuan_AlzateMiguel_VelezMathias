@@ -232,11 +232,12 @@ void Graph::writeStructuralAnalysis(const std::string& outputPath) {
     out.close();
     std::cout << "analisis guardado en: " << outputPath << std::endl;
 }
-// implementación de dijkstra para sacar los caminos del modulo b
+// dijkstra para modulo C: devuelve indices internos (no ids originales)
+// el modulo C necesita indices internos para indexar adjW directamente
 std::vector<int> Graph::dijkstra(int startId, int endId) {
     int startIdx = getInternalIdx(startId);
     int endIdx = getInternalIdx(endId);
-    
+
     if (startIdx == -1 || endIdx == -1) return {};
 
     std::vector<long long> dist(numNodes, INF_DIST);
@@ -266,9 +267,11 @@ std::vector<int> Graph::dijkstra(int startId, int endId) {
         }
     }
 
+    if (dist[endIdx] == INF_DIST) return {}; // no hay camino
+
     std::vector<int> path;
     for (int v = endIdx; v != -1; v = parent[v]) {
-        path.push_back(idxToId[v]);
+        path.push_back(v); // guardamos indices internos, no ids originales
     }
     std::reverse(path.begin(), path.end());
     return path;

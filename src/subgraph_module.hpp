@@ -3,10 +3,15 @@
 
 #include "graph.hpp"
 #include <vector>
+#include <string>
 
 class SubgraphModule {
 public:
-    void runModuleC(Graph& g, std::vector<int>& path1, std::vector<int>& path2);
+    // recibe los caminos como indices internos (no ids originales)
+    void runModuleC(const Graph& g,
+                    const std::vector<int>& path1,
+                    const std::vector<int>& path2,
+                    const std::string& outputDir);
 };
 
 #endif

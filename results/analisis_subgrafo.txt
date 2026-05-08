@@ -1,0 +1,11 @@
+=== analisis del subgrafo inducido (Q01 + Q06) ===
+
+nodos en el subgrafo: 219
+aristas en el subgrafo: 220
+aristas en el MST (Kruskal): 218
+peso total del MST: 931
+es un DAG (representacion dirigida u->v): si
+
+nota: el subgrafo original es no dirigido, por lo que siempre
+tiene ciclos. el check DAG se hace sobre aristas dirigidas (u < v)
+para verificar la estructura de los caminos minimos.
